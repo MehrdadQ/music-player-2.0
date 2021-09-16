@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Ubuntu", sans-serif;
+}
+
+h3,
+h4 {
+  font-weight: 400;
+  color: rgb(70, 70, 70);
+}
+
+h1,
+h2,
+h3 {
+  color: rgb(54, 54, 54);
+}
+
+.App {
+  transition: all 0.3s ease-in;
+}
+
+.library-active {
+  margin-left: 15rem;
+}
+
+.filler {
+  min-height: 10vh;
+  transition: all 0.3s ease-in;
+}
+
+@import "./player";
+@import "./song";
+@import "./library";
+@import "./nav";
