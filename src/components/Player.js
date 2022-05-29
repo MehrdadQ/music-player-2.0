@@ -78,7 +78,7 @@ const Player = ({
         <div
           className="track"
           style={{
-            backgroundColor: currentSong.color[1],
+            backgroundColor: currentSong.colors[1],
           }}
         >
           <input

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import "./styles/app.scss";
 
@@ -7,8 +7,11 @@ import Song from "./components/Song";
 import Library from "./components/Library";
 import Nav from "./components/Nav";
 
-import data from "./util";
+// import data from "./util";
 
+import { db } from "./utils/firebase.js";
+import { ref, onValue } from "firebase/database"
+import { v4 as uuidv4 } from "uuid";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 require('dotenv').config();
@@ -16,8 +19,15 @@ require('dotenv').config();
 
 function App() {
   const audioRef = useRef(null);
-  const [songs, setSongs] = useState(data());
-  const [currentSong, setCurrentSong] = useState(songs[0]);
+  const [songs, setSongs] = useState([]);
+  const [songNum, setSongNum] = useState(0)
+  const [currentSong, setCurrentSong] = useState({
+    title: "Please Wait",
+    artist: "",
+    cover: "https://i1.sndcdn.com/artworks-000175930618-pg6ffe-t500x500.jpg",
+    colors: ["white", "white", "white"],
+    audio: "",
+  });
   const [isPlaying, setIsPlaying] = useState(false);
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
@@ -50,18 +60,48 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    onValue(ref(db), snapshot => {
+      setSongs([])
+      const data = snapshot.val()
+      if (data !== null) {
+        setSongNum(Object.values(data).length)
+        Object.values(data).forEach(song => {
+          setSongs(old => [...old, song])
+        })
+        // console.log(`songs length is ${songs.length}`)
+        // if (songs.length !== 0) {
+        //   setCurrentSong(songs[0])
+        // }
+      }
+    })
+    
+  }, [])
+
+  useEffect(() => {
+    const aa = async (e) => {
+      await setCurrentSong(e)
+    }
+    // console.log(`songs.length is ${songs.length} and numSongs is ${songNum}`)
+    if (songs.length === songNum && songNum !== 0) {
+      console.log(songs[0])
+      // setCurrentSong(songs[0])
+      aa(songs[0])
+    }
+  }, [songs.length])
+
   return (
     <div
       className="biggest"
       style={{
-        backgroundColor: currentSong.color[0],
+        backgroundColor: currentSong.colors[2],
         transition: "all 0.5s ease",
       }}
     >
       <div
         className={`App ${libraryStatus ? "library-active" : ""}`}
         style={{
-          backgroundColor: currentSong.color[0],
+          backgroundColor: currentSong.colors[2],
         }}
       >
         <Nav
@@ -100,7 +140,7 @@ function App() {
       <div
         className="filler"
         style={{
-          backgroundColor: currentSong.color[0],
+          backgroundColor: currentSong.colors[2],
         }}
       ></div>
     </div>

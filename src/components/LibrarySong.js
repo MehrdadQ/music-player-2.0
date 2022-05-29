@@ -11,7 +11,6 @@ const LibrarySong = ({
   setSongs,
 }) => {
   const songSelectHandler = () => {
-    // const selectedSong = songs.filter((state) => state.id === id);
     setCurrentSong(song);
 
     const newSongs = songs.map((song) => {
@@ -32,7 +31,7 @@ const LibrarySong = ({
     >
       <img src={song.cover} alt="song cover"></img>
       <div className="song-description">
-        <h3>{song.name}</h3>
+        <h3>{song.title}</h3>
         <h4>{song.artist}</h4>
       </div>
     </div>

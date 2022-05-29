@@ -14,7 +14,7 @@ const Library = ({
     <div
       className={`library ${libraryStatus ? "active-library" : ""}`}
       style={{
-        backgroundColor: currentSong.color[2],
+        backgroundColor: currentSong.colors[2],
       }}
     >
       <h2>Library</h2>
