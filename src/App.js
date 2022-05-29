@@ -9,6 +9,8 @@ import Nav from "./components/Nav";
 
 import data from "./util";
 
+require('dotenv').config();
+
 function App() {
   const audioRef = useRef(null);
   const [songs, setSongs] = useState(data());
