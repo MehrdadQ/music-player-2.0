@@ -9,7 +9,10 @@ import Nav from "./components/Nav";
 
 import data from "./util";
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 require('dotenv').config();
+
 
 function App() {
   const audioRef = useRef(null);
