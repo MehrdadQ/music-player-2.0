@@ -13,9 +13,9 @@ const AddModal = (props) => {
   const [artist, setArtist] = useState("")
   const [cover, setCover] = useState("")
   const [audio, setAudio] = useState("")
-  const [color1, setColor1] = useState("rgb(255, 255, 255)")
-  const [color2, setColor2] = useState("rgb(0, 0, 0)")
-  const [color3, setColor3] = useState("rgb(255, 255, 255)")
+  const [color1, setColor1] = useState("white")
+  const [color2, setColor2] = useState("black")
+  const [color3, setColor3] = useState("lightgray")
 
   const handleAdd = () => {
     const uuid = uid()
@@ -77,17 +77,17 @@ const AddModal = (props) => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Color 1</Form.Label>
+            <Form.Label>Player Background Color</Form.Label>
             <Form.Control type="text"  value={color1} 
             onChange={(e) => setColor1(e.target.value)}/>
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Color 2</Form.Label>
+            <Form.Label>Tracker Color</Form.Label>
             <Form.Control type="text"  value={color2} 
             onChange={(e) => setColor2(e.target.value)}/>
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Color 3</Form.Label>
+            <Form.Label>Library Background Color</Form.Label>
             <Form.Control type="text"  value={color3} 
             onChange={(e) => setColor3(e.target.value)}/>
           </Form.Group>
@@ -106,7 +106,7 @@ const Nav = ({ libraryStatus, setLibraryStatus }) => {
   return (
     <>
       <nav>
-        <a href="https://github.com/MehrdadQ/Music-Player" target="blank">
+        <a href="https://github.com/MehrdadQ/music-player-2.0" target="blank">
           <FontAwesomeIcon icon={faGithub} size={"2x"} />
         </a>
         <button onClick={() => setLibraryStatus(!libraryStatus)}>
