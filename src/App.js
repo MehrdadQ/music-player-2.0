@@ -94,14 +94,14 @@ function App() {
     <div
       className="biggest"
       style={{
-        backgroundColor: currentSong.colors[2],
+        backgroundColor: currentSong.colors[0],
         transition: "all 0.5s ease",
       }}
     >
       <div
         className={`App ${libraryStatus ? "library-active" : ""}`}
         style={{
-          backgroundColor: currentSong.colors[2],
+          backgroundColor: currentSong.colors[0],
         }}
       >
         <Nav
@@ -140,7 +140,7 @@ function App() {
       <div
         className="filler"
         style={{
-          backgroundColor: currentSong.colors[2],
+          backgroundColor: currentSong.colors[0],
         }}
       ></div>
     </div>
