@@ -16,13 +16,12 @@ const AddModal = (props) => {
   const [cover, setCover] = useState("")
   const [audio, setAudio] = useState("")
   const [playerBackgroundColor, setPlayerBackgroundColor] = useState("white")
-  const [color2, setColor2] = useState("black")
-  const [color3, setColor3] = useState("lightgray")
-  const [selectColors, setSelectColors] = useState(false)
+  const [trackerColor, setTrackerColor] = useState("black")
+  const [libraryBackgroundColor, setLibraryBackgroundColor] = useState("lightgray")
 
   const handleAdd = () => {
     const uuid = uid()
-    const colors = [playerBackgroundColor, color2, color3]
+    const colors = [playerBackgroundColor, trackerColor, libraryBackgroundColor]
     const song = {
       title,
       artist,
@@ -37,8 +36,8 @@ const AddModal = (props) => {
     setCover("")
     setAudio("")
     setPlayerBackgroundColor("rgb(255, 255, 255)")
-    setColor2("rgb(0, 0, 0)")
-    setColor3("rgb(255, 255, 255)")
+    setTrackerColor("rgb(0, 0, 0)")
+    setLibraryBackgroundColor("rgb(255, 255, 255)")
   }
 
   return (
@@ -93,35 +92,20 @@ const AddModal = (props) => {
                 <Form.Group className="flex mb-3">
                   <Form.Label>Tracker Color</Form.Label>
                   <SliderPicker
-                    color={color2}
-                    onChangeComplete={(e) => setColor2(e.hex)}
+                    color={trackerColor}
+                    onChangeComplete={(e) => setTrackerColor(e.hex)}
                   />
                 </Form.Group>
                 <Form.Group className="flex mb-3">
                   <Form.Label>Library Background Color</Form.Label>
                   <SliderPicker
-                    color={color3}
-                    onChangeComplete={(e) => setColor3(e.hex)}
+                    color={libraryBackgroundColor}
+                    onChangeComplete={(e) => setLibraryBackgroundColor(e.hex)}
                   />
                 </Form.Group>
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
-          {/* <Form.Group className="mb-3">
-            <Form.Label>Player Background Color</Form.Label>
-            <Form.Control type="text"  value={playerBackgroundColor} 
-            onChange={(e) => setPlayerBackgroundColor(e.target.value)}/>
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Tracker Color</Form.Label>
-            <Form.Control type="text"  value={color2} 
-            onChange={(e) => setColor2(e.target.value)}/>
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Library Background Color</Form.Label>
-            <Form.Control type="text"  value={color3} 
-            onChange={(e) => setColor3(e.target.value)}/>
-          </Form.Group> */}
         </Form>
       </Modal.Body>
       <Modal.Footer>
