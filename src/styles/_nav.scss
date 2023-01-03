@@ -26,3 +26,31 @@ nav {
     }
   }
 }
+
+.wrapper {
+  position: fixed;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30%;
+  animation: fadeIn 0.5s ease-in-out, 0.5s fadeOut 3s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    top: -100px;
+  }
+  to {
+    top: 20px;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    top: 20px;
+  }
+  to {
+    top: -100px;
+  }
+}

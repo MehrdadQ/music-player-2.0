@@ -6,13 +6,11 @@ import Player from "./components/Player";
 import Song from "./components/Song";
 import Library from "./components/Library";
 import Nav from "./components/Nav";
-
-// import data from "./util";
-
 import { db } from "./utils/firebase.js";
 import { ref, onValue } from "firebase/database"
 import { v4 as uuidv4 } from "uuid";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 require('dotenv').config();
 
@@ -35,6 +33,7 @@ function App() {
     animationPercentage: 0,
   });
   const [libraryStatus, setLibraryStatus] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null)
 
   const timeUpdateHandler = (e) => {
     const current = e.target.currentTime;
@@ -61,6 +60,21 @@ function App() {
   };
 
   useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("user is signed in")
+        setCurrentUser(user)
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        // ...
+      } else {
+        console.log("no user")
+        // User is signed out
+        // ...
+      }
+    });
     onValue(ref(db), snapshot => {
       setSongs([])
       const data = snapshot.val()
@@ -69,10 +83,6 @@ function App() {
         Object.values(data).forEach(song => {
           setSongs(old => [...old, song])
         })
-        // console.log(`songs length is ${songs.length}`)
-        // if (songs.length !== 0) {
-        //   setCurrentSong(songs[0])
-        // }
       }
     })
     
@@ -82,7 +92,6 @@ function App() {
     const aa = async (e) => {
       await setCurrentSong(e)
     }
-    // console.log(`songs.length is ${songs.length} and numSongs is ${songNum}`)
     if (songs.length === songNum && songNum !== 0) {
       console.log(songs[0])
       // setCurrentSong(songs[0])
@@ -107,6 +116,8 @@ function App() {
         <Nav
           libraryStatus={libraryStatus}
           setLibraryStatus={setLibraryStatus}
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
         />
         <Song currentSong={currentSong} />
         <Player
