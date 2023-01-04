@@ -63,38 +63,32 @@ function App() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log("user is signed in")
         setCurrentUser(user)
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        const uid = user.uid;
-        // ...
       } else {
-        console.log("no user")
         // User is signed out
         // ...
       }
     });
-    onValue(ref(db), snapshot => {
-      setSongs([])
-      const data = snapshot.val()
-      if (data !== null) {
-        setSongNum(Object.values(data).length)
-        Object.values(data).forEach(song => {
-          setSongs(old => [...old, song])
-        })
-      }
-    })
-    
-  }, [])
+    if (currentUser) {
+      onValue(ref(db, `${currentUser.uid}/songs`), snapshot => {
+        setSongs([])
+        const data = snapshot.val()
+        if (data !== null) {
+          setSongNum(Object.values(data).length)
+          Object.values(data).forEach(song => {
+            setSongs(old => [...old, song])
+          })
+        }
+      })
+    }
+  }, [currentUser])
+  
 
   useEffect(() => {
     const aa = async (e) => {
       await setCurrentSong(e)
     }
     if (songs.length === songNum && songNum !== 0) {
-      console.log(songs[0])
-      // setCurrentSong(songs[0])
       aa(songs[0])
     }
   }, [songs.length])

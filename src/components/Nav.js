@@ -4,124 +4,123 @@ import { faMusic, faPlus, faSignOutAlt, faSignInAlt } from "@fortawesome/free-so
 import { Modal, Button, Form, Accordion, ButtonGroup, ToggleButton, Alert } from 'react-bootstrap';
 import { db } from "../utils/firebase.js";
 import { useState, useEffect } from "react";
-import { set, ref } from "firebase/database"
+import { set, ref, push } from "firebase/database"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { uid } from "uid"
 import { SliderPicker } from 'react-color';
 import { Portal } from 'react-portal';
 
-const AddModal = (props) => {
-  const [title, setTitle] = useState("")
-  const [artist, setArtist] = useState("")
-  const [cover, setCover] = useState("")
-  const [audio, setAudio] = useState("")
-  const [playerBackgroundColor, setPlayerBackgroundColor] = useState("white")
-  const [trackerColor, setTrackerColor] = useState("black")
-  const [libraryBackgroundColor, setLibraryBackgroundColor] = useState("lightgray")
-
-  const handleAdd = () => {
-    const uuid = uid()
-    const colors = [playerBackgroundColor, trackerColor, libraryBackgroundColor]
-    const song = {
-      title,
-      artist,
-      cover,
-      audio,
-      id: uuid,
-      colors
-    }
-    set(ref(db, uuid), song)
-    setTitle("")
-    setArtist("")
-    setCover("")
-    setAudio("")
-    setPlayerBackgroundColor("rgb(255, 255, 255)")
-    setTrackerColor("rgb(0, 0, 0)")
-    setLibraryBackgroundColor("rgb(255, 255, 255)")
-  }
-
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Add new song
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form>
-          <Form.Group className="mb-3">
-            <Form.Label>Song title</Form.Label>
-            <Form.Control type="text" value={title} 
-            onChange={(e) => setTitle(e.target.value)}/>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Artist</Form.Label>
-            <Form.Control type="text" value={artist} 
-            onChange={(e) => setArtist(e.target.value)}/>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Cover photo link</Form.Label>
-            <Form.Control type="text" value={cover} 
-            onChange={(e) => setCover(e.target.value)}/>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Audio link</Form.Label>
-            <Form.Control type="text"  value={audio} 
-            onChange={(e) => setAudio(e.target.value)}/>
-          </Form.Group>
-
-          <Accordion defaultActiveKey="0">
-            <Accordion.Item>
-              <Accordion.Header>Customize Colors</Accordion.Header>
-              <Accordion.Body>
-                <Form.Group className="flex mb-3">
-                  <Form.Label>Player Background Color</Form.Label>
-                  <SliderPicker
-                    color={playerBackgroundColor}
-                    onChangeComplete={(e) => setPlayerBackgroundColor(e.hex)}
-                  />
-                </Form.Group>
-                <Form.Group className="flex mb-3">
-                  <Form.Label>Tracker Color</Form.Label>
-                  <SliderPicker
-                    color={trackerColor}
-                    onChangeComplete={(e) => setTrackerColor(e.hex)}
-                  />
-                </Form.Group>
-                <Form.Group className="flex mb-3">
-                  <Form.Label>Library Background Color</Form.Label>
-                  <SliderPicker
-                    color={libraryBackgroundColor}
-                    onChangeComplete={(e) => setLibraryBackgroundColor(e.hex)}
-                  />
-                </Form.Group>
-              </Accordion.Body>
-            </Accordion.Item>
-          </Accordion>
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={() => handleAdd()}>Add</Button>
-      </Modal.Footer>
-    </Modal>
-  );
-}
-
-
-const Nav = ({ libraryStatus, setLibraryStatus, currentUser, setCurrentUser }) => {
-  console.log(currentUser)
+const Nav = React.memo(({ libraryStatus, setLibraryStatus, currentUser, setCurrentUser }) => {
+  console.log("Nav")
   const [showAddModal, setShowAddModal] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   const [showLoginSuccess, setShowLoginSuccess] = useState(false)
+
+  const AddModal = (props) => {
+    const [title, setTitle] = useState("")
+    const [artist, setArtist] = useState("")
+    const [cover, setCover] = useState("")
+    const [audio, setAudio] = useState("")
+    const [playerBackgroundColor, setPlayerBackgroundColor] = useState("white")
+    const [trackerColor, setTrackerColor] = useState("black")
+    const [libraryBackgroundColor, setLibraryBackgroundColor] = useState("lightgray")
+  
+    const handleAdd = () => {
+      const uuid = uid()
+      const colors = [playerBackgroundColor, trackerColor, libraryBackgroundColor]
+      const song = {
+        title,
+        artist,
+        cover,
+        audio,
+        id: uuid,
+        colors
+      }
+      push(ref(db, `${currentUser.uid}/songs`), song)
+      setTitle("")
+      setArtist("")
+      setCover("")
+      setAudio("")
+      setPlayerBackgroundColor("rgb(255, 255, 255)")
+      setTrackerColor("rgb(0, 0, 0)")
+      setLibraryBackgroundColor("rgb(255, 255, 255)")
+    }
+  
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Add new song
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Song title</Form.Label>
+              <Form.Control type="text" value={title} 
+              onChange={(e) => setTitle(e.target.value)}/>
+            </Form.Group>
+  
+            <Form.Group className="mb-3">
+              <Form.Label>Artist</Form.Label>
+              <Form.Control type="text" value={artist} 
+              onChange={(e) => setArtist(e.target.value)}/>
+            </Form.Group>
+  
+            <Form.Group className="mb-3">
+              <Form.Label>Cover photo link</Form.Label>
+              <Form.Control type="text" value={cover} 
+              onChange={(e) => setCover(e.target.value)}/>
+            </Form.Group>
+  
+            <Form.Group className="mb-3">
+              <Form.Label>Audio link</Form.Label>
+              <Form.Control type="text"  value={audio} 
+              onChange={(e) => setAudio(e.target.value)}/>
+            </Form.Group>
+  
+            <Accordion defaultActiveKey="0">
+              <Accordion.Item>
+                <Accordion.Header>Customize Colors</Accordion.Header>
+                <Accordion.Body>
+                  <Form.Group className="flex mb-3">
+                    <Form.Label>Player Background Color</Form.Label>
+                    <SliderPicker
+                      color={playerBackgroundColor}
+                      onChangeComplete={(e) => setPlayerBackgroundColor(e.hex)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="flex mb-3">
+                    <Form.Label>Tracker Color</Form.Label>
+                    <SliderPicker
+                      color={trackerColor}
+                      onChangeComplete={(e) => setTrackerColor(e.hex)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="flex mb-3">
+                    <Form.Label>Library Background Color</Form.Label>
+                    <SliderPicker
+                      color={libraryBackgroundColor}
+                      onChangeComplete={(e) => setLibraryBackgroundColor(e.hex)}
+                    />
+                  </Form.Group>
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => handleAdd()}>Add</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
 
   const LoginModal = (props) => {
     const [action, setAction] = useState("login")
@@ -294,6 +293,32 @@ const Nav = ({ libraryStatus, setLibraryStatus, currentUser, setCurrentUser }) =
     );
   }
 
+  const NotLoggedInModal = (props) => {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header>
+          <h4>Login required</h4>
+        </Modal.Header>
+        <Modal.Body>It seems like you're not logged in</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {setShowAddModal(false)}}>Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {setShowAddModal(false); setShowLoginModal(true)}}>Log in
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    )
+  }
+
   return (
     <>
       <nav>
@@ -317,10 +342,13 @@ const Nav = ({ libraryStatus, setLibraryStatus, currentUser, setCurrentUser }) =
         onHide={() => setShowLoginSuccess(false)}
       />
 
-      <AddModal
+      {currentUser ? <AddModal
         show={showAddModal}
         onHide={() => setShowAddModal(false)}
-      />
+        /> : <NotLoggedInModal
+        show={showAddModal}
+        onHide={() => setShowAddModal(false)}
+      />}
 
       <LoginModal
         show={showLoginModal}
@@ -333,6 +361,6 @@ const Nav = ({ libraryStatus, setLibraryStatus, currentUser, setCurrentUser }) =
       />
     </>
   );
-};
+});
 
 export default Nav;
