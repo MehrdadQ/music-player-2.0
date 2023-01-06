@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMusic, faPlus, faSignOutAlt, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button, Form, Accordion, ButtonGroup, ToggleButton, Alert } from 'react-bootstrap';
 import { db } from "../utils/firebase.js";
-import { useState, useEffect } from "react";
-import { set, ref, push } from "firebase/database"
+import { ref, push } from "firebase/database"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { uid } from "uid"
 import { SliderPicker } from 'react-color';
@@ -382,14 +381,16 @@ const LoginModal = ({ show, onHide, setCurrentUser, setShowLoginSuccess, setShow
               />
             </Form.Group>
           </> : <></>}
-          <p
-            className="text-primary font-weight-bold text-sm float-end" 
-            variant="secondary"
-            onClick={() => {setAction("reset_password")}}
-            style={{cursor:"pointer"}}
-          >
-            Forgot your password?
-          </p>
+          <div className="d-flex float-end">
+            <p
+              className="text-primary font-weight-bold text-sm" 
+              variant="secondary"
+              onClick={() => {setAction("reset_password")}}
+              style={{cursor:"pointer"}}
+            >
+              Forgot your password?
+            </p>
+          </div>
         </Form>
 
 
@@ -422,36 +423,36 @@ const LoginModal = ({ show, onHide, setCurrentUser, setShowLoginSuccess, setShow
   );
 }
 
+const LogoutModal = ({ showLogoutModal, setShowLogoutModal }) => {
+  const handleSignOut = () => {
+    const auth = getAuth()
+    signOut(auth)
+    window.location.reload();
+  }
+
+  return <Modal show={showLogoutModal} onHide={() => setShowLogoutModal(false)}>
+  <Modal.Header closeButton>
+    <Modal.Title>Sign Out</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    Are you sure you want to sign out?
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>
+      Cancel
+    </Button>
+    <Button variant="danger" onClick={handleSignOut}>
+      Sign Out
+    </Button>
+  </Modal.Footer>
+</Modal>
+}
+
 const Nav = React.memo(({ libraryStatus, setLibraryStatus, currentUser, setCurrentUser }) => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   const [showLoginSuccess, setShowLoginSuccess] = useState(false)
-
-  const LogoutModal = () => {
-    const handleSignOut = () => {
-      const auth = getAuth()
-      signOut(auth)
-      window.location.reload();
-    }
-
-    return <Modal show={showLogoutModal} onHide={() => setShowLogoutModal(false)}>
-    <Modal.Header closeButton>
-      <Modal.Title>Sign Out</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-      Are you sure you want to sign out?
-    </Modal.Body>
-    <Modal.Footer>
-      <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>
-        Cancel
-      </Button>
-      <Button variant="danger" onClick={handleSignOut}>
-        Sign Out
-      </Button>
-    </Modal.Footer>
-  </Modal>
-  }
 
   return (
     <>
@@ -500,8 +501,8 @@ const Nav = React.memo(({ libraryStatus, setLibraryStatus, currentUser, setCurre
       />
 
       <LogoutModal
-        show={showLogoutModal}
-        onHide={() => setShowLogoutModal(false)}
+        showLogoutModal={showLogoutModal}
+        setShowLogoutModal={setShowLogoutModal}
       />
     </>
   );

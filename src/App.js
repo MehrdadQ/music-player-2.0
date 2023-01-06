@@ -8,7 +8,6 @@ import Library from "./components/Library";
 import Nav from "./components/Nav";
 import { db } from "./utils/firebase.js";
 import { ref, onValue } from "firebase/database"
-import { v4 as uuidv4 } from "uuid";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -83,13 +82,13 @@ function App() {
     }
   }, [currentUser])
   
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    const aa = async (e) => {
+    const setInitialSong = async (e) => {
       await setCurrentSong(e)
     }
     if (songs.length === songNum && songNum !== 0) {
-      aa(songs[0])
+      setInitialSong(songs[0])
     }
   }, [songs.length])
 
