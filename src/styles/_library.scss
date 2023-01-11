@@ -26,12 +26,26 @@
 
   img {
     width: 30%;
+    aspect-ratio: 1;
     border-radius: 50%;
   }
 
   &:hover {
     background-color: rgb(209, 209, 209);
     transition: all 0.3s;
+  }
+
+  .song-delete-button {
+    transition: all 0.3s;
+    margin-left: auto;
+    padding: 1rem;
+  }
+
+  .song-delete-button:hover {
+    transition: all 0.3s;
+    color: rgb(212, 61, 61);
+    font-size: 22px;
+    margin-right: -2px;
   }
 }
 

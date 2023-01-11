@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMusic, faPlus, faSignOutAlt, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button, Form, Accordion, ButtonGroup, ToggleButton, Alert } from 'react-bootstrap';
 import { db } from "../utils/firebase.js";
-import { ref, push } from "firebase/database"
+import { ref, set } from "firebase/database"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "firebase/auth";
 import { uid } from "uid"
 import { SliderPicker } from 'react-color';
@@ -29,7 +29,8 @@ const AddModal = ({ show, onHide, currentUser }) => {
       id: uuid,
       colors
     }
-    push(ref(db, `${currentUser.uid}/songs`), song)
+    set(ref(db, `${currentUser.uid}/songs/${uuid}`), song)
+    
     setTitle("")
     setArtist("")
     setCover("")

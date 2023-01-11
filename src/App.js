@@ -150,6 +150,7 @@ function App() {
           setSongs={setSongs}
         />
         <Library
+          currentUser={currentUser}
           audioRef={audioRef}
           isPlaying={isPlaying}
           songs={songs}

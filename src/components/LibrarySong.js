@@ -1,9 +1,15 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 import { playAudio } from "../Promise";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { db } from "../utils/firebase.js";
+import { ref, remove } from "firebase/database"
 
 const LibrarySong = ({
   song,
   songs,
+  currentUser,
   setCurrentSong,
   id,
   audioRef,
@@ -24,6 +30,12 @@ const LibrarySong = ({
     setSongs(newSongs);
     playAudio(isPlaying, audioRef);
   };
+
+  const handleDeleteSong = () => {
+    console.log(`deleting song ${song.id}`)
+    remove(ref(db, `${currentUser.uid}/songs/${song.id}`))
+  }
+
   return (
     <div
       className={`library-song ${song.active ? "selected" : ""}`}
@@ -33,6 +45,9 @@ const LibrarySong = ({
       <div className="song-description">
         <h3>{song.title}</h3>
         <h4>{song.artist}</h4>
+      </div>
+      <div className="song-delete-button" onClick={(e) => {e.stopPropagation(); handleDeleteSong()}}>
+        <FontAwesomeIcon icon={faTrash} />
       </div>
     </div>
   );
