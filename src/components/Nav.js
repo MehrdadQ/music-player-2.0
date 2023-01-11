@@ -150,7 +150,7 @@ const NotLoggedInModal = ({ show, onHide, setShowAddModal, setShowLoginModal }) 
       <Modal.Header>
         <h4>Login required</h4>
       </Modal.Header>
-      <Modal.Body>It seems like you're not logged in</Modal.Body>
+      <Modal.Body>To add songs to your playlist, please log in or sign up if you don't have an account.</Modal.Body>
       <Modal.Footer>
         <Button
           variant="secondary"
@@ -254,7 +254,7 @@ const LoginModal = ({ show, onHide, setCurrentUser, setShowLoginSuccess, setShow
   const handleCloseModal = () => {
     onHide();
     setTimeout(() => {
-      setAction("login");
+      handleChangeAction("login");
     }, 300);
   }
   
@@ -291,8 +291,11 @@ const LoginModal = ({ show, onHide, setCurrentUser, setShowLoginSuccess, setShow
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={onHide}>Close</Button>
-          <Button onClick={() => handleResetPassword()}>Reset Password</Button>
+          <Button onClick={handleCloseModal}>Close</Button>
+          <Button
+            onClick={() => handleResetPassword()}
+            disabled={email === ""}
+          >Reset Password</Button>
         </Modal.Footer>
       </Modal>
     )
@@ -371,7 +374,7 @@ const LoginModal = ({ show, onHide, setCurrentUser, setShowLoginSuccess, setShow
           </Form.Group>
           {action === "signup" ?
           <>
-            <Form.Group>
+            <Form.Group className="mb-3">
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control
                 type="password"
@@ -381,7 +384,7 @@ const LoginModal = ({ show, onHide, setCurrentUser, setShowLoginSuccess, setShow
               />
             </Form.Group>
           </> : <></>}
-          <div className="d-flex float-end">
+          {action === "login" ? <div className="d-flex justify-content-end">
             <p
               className="text-primary font-weight-bold text-sm" 
               variant="secondary"
@@ -390,7 +393,7 @@ const LoginModal = ({ show, onHide, setCurrentUser, setShowLoginSuccess, setShow
             >
               Forgot your password?
             </p>
-          </div>
+          </div> : <></>}
         </Form>
 
 
@@ -412,7 +415,7 @@ const LoginModal = ({ show, onHide, setCurrentUser, setShowLoginSuccess, setShow
       <Modal.Footer className="ps-5 pe-5">
         <Button
           className="w-100"
-          disabled={action === "signup" && (password !== passwordConfirm || password.length < 6)}
+          disabled={(action === "signup" && (password !== passwordConfirm || password.length < 6)) || email === ""}
           onClick={action === "signup" ? ()=>{handleSignUp()} : ()=>{handleLogin()}}
         >
           {action === "login" ? `Log in` : `Sign up`}
@@ -430,7 +433,13 @@ const LogoutModal = ({ showLogoutModal, setShowLogoutModal }) => {
     window.location.reload();
   }
 
-  return <Modal show={showLogoutModal} onHide={() => setShowLogoutModal(false)}>
+  return <Modal 
+    show={showLogoutModal} 
+    onHide={() => setShowLogoutModal(false)}
+    size="lg"
+    aria-labelledby="contained-modal-title-vcenter"
+    centered
+  >
   <Modal.Header closeButton>
     <Modal.Title>Sign Out</Modal.Title>
   </Modal.Header>

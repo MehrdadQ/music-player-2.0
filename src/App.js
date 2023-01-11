@@ -10,12 +10,40 @@ import { db } from "./utils/firebase.js";
 import { ref, onValue } from "firebase/database"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { default_songs } from './util.js'
+import { Modal, Button } from "react-bootstrap";
 
 require('dotenv').config();
 
+const NewUserModal = ({ show, onHide }) => {
+  return (
+    <Modal
+      show={show}
+      onHide={onHide}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header>
+        <h4>Welcome to the Music player app!</h4>
+      </Modal.Header>
+      <Modal.Body>
+        Hey there! You can just play around with the player and listen to some pre-existing songs, or
+        you can sign up and start creating your own playlists!
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          variant="primary"
+          onClick={onHide}>Got it!
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  )
+}
 
 function App() {
   const audioRef = useRef(null);
+  const [showNewUserModal, setShowNewUserModal] = useState(localStorage.getItem("first_visit") !== "false")
   const [songs, setSongs] = useState([]);
   const [songNum, setSongNum] = useState(0)
   const [currentSong, setCurrentSong] = useState({
@@ -63,26 +91,23 @@ function App() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user)
+        onValue(ref(db, `${user.uid}/songs`), snapshot => {
+          setSongs([])
+          const data = snapshot.val()
+          if (data !== null) {
+            setSongNum(Object.values(data).length)
+            Object.values(data).forEach(song => {
+              setSongs(old => [...old, song])
+            })
+          }
+        })
       } else {
-        // User is signed out
-        // ...
+        setSongNum(default_songs.length)
+        setSongs(default_songs)
       }
     });
-    if (currentUser) {
-      onValue(ref(db, `${currentUser.uid}/songs`), snapshot => {
-        setSongs([])
-        const data = snapshot.val()
-        if (data !== null) {
-          setSongNum(Object.values(data).length)
-          Object.values(data).forEach(song => {
-            setSongs(old => [...old, song])
-          })
-        }
-      })
-    }
   }, [currentUser])
   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const setInitialSong = async (e) => {
       await setCurrentSong(e)
@@ -147,6 +172,10 @@ function App() {
           backgroundColor: currentSong.colors[0],
         }}
       ></div>
+      <NewUserModal
+        show={showNewUserModal}
+        onHide={() => {setShowNewUserModal(false); localStorage.setItem("first_visit", "false")}}
+      />
     </div>
   );
 }
