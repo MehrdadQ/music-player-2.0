@@ -1,4 +1,4 @@
-# [Music Player](https://github.com/MehrdadQ/music-player-2.0)
+# [Music Player](https://mehrdadq.github.io/music-player-2.0/)
 
 Music player app made with React and Firebase and styled with SCSS and Bootstrap.
 
