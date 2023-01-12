@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "./styles/app.scss";
 
@@ -12,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { default_songs } from './util.js'
 import { Modal, Button } from "react-bootstrap";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 require('dotenv').config();
 
@@ -177,6 +179,9 @@ function App() {
         show={showNewUserModal}
         onHide={() => {setShowNewUserModal(false); localStorage.setItem("first_visit", "false")}}
       />
+      <a href="https://github.com/MehrdadQ/music-player-2.0" target="blank" className="github-link">
+        <FontAwesomeIcon icon={faGithub} size={"2x"} />
+      </a>
     </div>
   );
 }

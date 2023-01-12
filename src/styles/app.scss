@@ -33,6 +33,22 @@ h3 {
   transition: all 0.3s ease-in;
 }
 
+.github-link {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  color: inherit;
+  background: transparent;
+  border: 2px solid rgb(65, 65, 65);
+  cursor: pointer;
+  padding: 0.3rem;
+  transition: all 0.3s ease;
+  &:hover {
+    background: rgb(65, 65, 65);
+    color: white;
+  }
+}
+
 @import "./player";
 @import "./song";
 @import "./library";

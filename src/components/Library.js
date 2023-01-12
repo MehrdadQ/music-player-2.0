@@ -19,6 +19,10 @@ const Library = ({
       }}
     >
       <h2>Library</h2>
+      {songs.length === 0 ? 
+      <p style={{"padding-left": "2rem"}}>
+        You don't have any songs in your playlist, add some using the plus button!
+      </p> : <></>}
       <div className="library-songs">
         {songs.map((song) => (
           <LibrarySong

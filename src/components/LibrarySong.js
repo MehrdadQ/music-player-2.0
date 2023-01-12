@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import { playAudio } from "../Promise";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -46,9 +45,11 @@ const LibrarySong = ({
         <h3>{song.title}</h3>
         <h4>{song.artist}</h4>
       </div>
+      {currentUser === null ? <></> :
       <div className="song-delete-button" onClick={(e) => {e.stopPropagation(); handleDeleteSong()}}>
         <FontAwesomeIcon icon={faTrash} />
       </div>
+      }
     </div>
   );
 };
